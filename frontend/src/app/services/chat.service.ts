@@ -22,7 +22,14 @@ export class ChatService {
 
     this.client = new Client({
       webSocketFactory: () => new SockJS(environment.wsBackendUrl),
-      debug: (str) => console.log(str)
+      debug: (str) => console.log(str),
+      // Configuration des heartbeats pour maintenir la connexion active
+      heartbeatIncoming: 25000,
+      heartbeatOutgoing: 25000,
+      // Reconnexion automatique en cas de perte de connexion
+      reconnectDelay: 5000,
+      // Temps d'attente avant de considérer la connexion comme perdue
+      connectionTimeout: 60000
     });
 
     this.client.onConnect = () => {
