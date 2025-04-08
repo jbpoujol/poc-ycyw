@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.util.Map;
+
 @Controller
 public class ChatController {
 
@@ -21,7 +23,13 @@ public class ChatController {
     public ChatMessage addUser(@Payload ChatMessage chatMessage, 
                                SimpMessageHeaderAccessor headerAccessor) {
         // Ajouter le nom d'utilisateur dans la session WebSocket
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+        if (sessionAttributes != null) {
+            sessionAttributes.put("username", chatMessage.getSender());
+        } else {
+            // Log ou gestion alternative si les attributs de session sont null
+            System.out.println("Warning: Session attributes are null for user " + chatMessage.getSender());
+        }
         return chatMessage;
     }
 }
