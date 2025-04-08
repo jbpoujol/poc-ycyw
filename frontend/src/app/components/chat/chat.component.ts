@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { ChatMessage, MessageType } from '../../models/chat-message.model';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class ChatComponent implements OnInit, OnDestroy {
   username: string = '';

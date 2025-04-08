@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Client, IMessage } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
@@ -9,10 +10,10 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class ChatService {
-  private client: Client;
+  private client!: Client;
   private messagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   public messages$ = this.messagesSubject.asObservable();
-  private username: string;
+  private username: string = '';
 
   constructor() { }
 

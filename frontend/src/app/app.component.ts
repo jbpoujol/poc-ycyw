@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { ChatComponent } from './components/chat/chat.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [ChatComponent],
   template: `
     <div class="container mt-3">
       <div class="row">
