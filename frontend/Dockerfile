@@ -4,7 +4,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # Copier les fichiers de configuration
-COPY package.json ./
+COPY package*.json ./
 
 # Installer les dépendances
 RUN npm install
@@ -12,10 +12,8 @@ RUN npm install
 # Copier le code source
 COPY . .
 
-# Créer un dossier dist simple pour éviter les problèmes de build
-RUN mkdir -p /app/dist/frontend && \
-    cp -r src/* /app/dist/frontend/ && \
-    cp index.html /app/dist/frontend/ || echo "Creating simple dist folder"
+# Construire l'application
+RUN npm run build
 
 # Étape de déploiement avec Nginx
 FROM nginx:alpine

@@ -1,50 +1,64 @@
-<div class="chat-container">
-  <div class="login-form" *ngIf="!isConnected">
-    <div class="card">
-      <div class="card-header">
-        <h3>Rejoindre le chat</h3>
-      </div>
-      <div class="card-body">
-        <div class="form-group">
-          <label for="username">Nom d'utilisateur</label>
-          <input type="text" class="form-control" id="username" [(ngModel)]="username" placeholder="Entrez votre nom d'utilisateur" (keyup.enter)="connect()">
+<div class="flex justify-content-center">
+  <div class="w-full md:w-8 lg:w-6" *ngIf="!isConnected">
+    <p-card header="Rejoindre le chat" styleClass="shadow-3">
+      <div class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label for="username" class="font-medium">Nom d'utilisateur</label>
+          <input pInputText id="username" [(ngModel)]="username" placeholder="Entrez votre nom d'utilisateur" (keyup.enter)="connect()" class="w-full" />
         </div>
-        <button class="btn btn-primary mt-3" (click)="connect()">Rejoindre</button>
+        <div class="flex justify-content-end">
+          <p-button label="Rejoindre" icon="pi pi-sign-in" (onClick)="connect()" [disabled]="!username.trim()"></p-button>
+        </div>
       </div>
-    </div>
+    </p-card>
   </div>
 
-  <div class="chat-box" *ngIf="isConnected">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3>Chat en temps réel</h3>
-        <button class="btn btn-danger btn-sm" (click)="disconnect()">Quitter</button>
-      </div>
-      <div class="card-body">
-        <div class="messages-container">
-          <div *ngFor="let msg of messages" [ngClass]="getMessageClass(msg)" class="message">
-            <div *ngIf="msg.type === 'CHAT'" class="message-content">
-              <div class="sender">{{ msg.sender }}</div>
-              <div class="text">{{ msg.content }}</div>
-              <div class="time" *ngIf="msg.timestamp">{{ msg.timestamp | date:'short' }}</div>
+  <div class="w-full md:w-8 lg:w-6" *ngIf="isConnected">
+    <p-card styleClass="shadow-3">
+      <ng-template pTemplate="header">
+        <div class="flex justify-content-between align-items-center p-3 bg-gray-800 text-white">
+          <h3 class="m-0 font-medium">Chat en temps réel</h3>
+          <p-button icon="pi pi-sign-out" severity="danger" (onClick)="disconnect()" styleClass="p-button-sm"></p-button>
+        </div>
+      </ng-template>
+      
+      <div class="messages-container overflow-y-auto h-25rem p-3 bg-gray-900 border-round">
+        <div *ngFor="let msg of messages" class="mb-3">
+          <!-- Message de chat -->
+          <div *ngIf="msg.type === 'CHAT'" class="flex" [ngClass]="msg.sender === username ? 'justify-content-end' : 'justify-content-start'">
+            <div class="message-bubble" [ngClass]="msg.sender === username ? 'my-message' : 'other-message'">
+              <div class="font-bold mb-2">{{ msg.sender }}</div>
+              <div class="message-content">{{ msg.content }}</div>
+              <div class="text-xs mt-3 text-right opacity-80" *ngIf="msg.timestamp">{{ msg.timestamp | date:'short' }}</div>
             </div>
-            <div *ngIf="msg.type === 'JOIN'" class="system-message">
+          </div>
+          
+          <!-- Message système (JOIN) -->
+          <div *ngIf="msg.type === 'JOIN'" class="flex justify-content-center my-3">
+            <div class="bg-green-50 text-green-700 px-4 py-3 border-radius-xl text-sm shadow-1 border-1 border-green-200">
+              <i class="pi pi-user-plus mr-2"></i>
               <em>{{ msg.sender }} a rejoint le chat</em>
             </div>
-            <div *ngIf="msg.type === 'LEAVE' && isFirstLeaveMessage(msg)" class="system-message">
+          </div>
+          
+          <!-- Message système (LEAVE) -->
+          <div *ngIf="msg.type === 'LEAVE' && isFirstLeaveMessage(msg)" class="flex justify-content-center my-3">
+            <div class="bg-blue-50 text-blue-700 px-4 py-3 border-radius-xl text-sm shadow-1 border-1 border-blue-200">
+              <i class="pi pi-user-minus mr-2"></i>
               <em>{{ msg.sender }} a quitté le chat</em>
             </div>
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <div class="input-group">
-          <input type="text" class="form-control" [(ngModel)]="message" placeholder="Tapez votre message..." (keyup.enter)="sendMessage()">
-          <div class="input-group-append">
-            <button class="btn btn-primary" (click)="sendMessage()">Envoyer</button>
+      
+      <ng-template pTemplate="footer">
+        <div class="flex gap-2 p-3 bg-gray-800">
+          <div class="flex-grow-1">
+            <input pInputText [(ngModel)]="message" placeholder="Tapez votre message..." (keyup.enter)="sendMessage()" class="w-full" />
           </div>
+          <p-button icon="pi pi-send" (onClick)="sendMessage()" [disabled]="!message.trim()" severity="success"></p-button>
         </div>
-      </div>
-    </div>
+      </ng-template>
+    </p-card>
   </div>
 </div>

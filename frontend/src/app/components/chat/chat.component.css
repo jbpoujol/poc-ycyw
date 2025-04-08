@@ -1,55 +1,91 @@
-.chat-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
+/* Styles spécifiques qui ne sont pas couverts par PrimeFlex */
 .messages-container {
-  height: 400px;
-  overflow-y: auto;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
+  scroll-behavior: smooth;
+  background-image: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(30, 30, 30, 0.95));
 }
 
-.message {
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 8px;
+/* Animation pour les nouveaux messages */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mb-3 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Styles pour améliorer l'apparence des bulles de message */
+.max-w-20rem {
+  max-width: 20rem;
+  word-break: break-word;
+}
+
+/* Hauteur fixe pour le conteneur de messages */
+.h-25rem {
+  height: 25rem;
+}
+
+/* Amélioration du contraste pour les messages */
+.text-900 {
+  color: #212121 !important;
+  font-weight: 500;
+}
+
+.text-white {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Styles pour les bulles de message */
+.message-bubble {
+  padding: 1.25rem;
+  border-radius: 1.25rem;
   max-width: 80%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+  margin: 0 0.5rem;
 }
 
 .my-message {
-  background-color: #007bff;
+  background-color: #0277BD;
   color: white;
-  margin-left: auto;
+  border: 1px solid #0288D1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  align-self: flex-end;
 }
 
 .other-message {
-  background-color: #e9ecef;
-  color: #212529;
+  background-color: #f8f9fa;
+  color: #212121;
+  border: 1px solid #e0e0e0;
+  font-weight: 500;
+  align-self: flex-start;
 }
 
-.event-message {
-  text-align: center;
-  color: #6c757d;
-  width: 100%;
-  font-style: italic;
-  margin: 10px 0;
+/* Style pour le contenu du message */
+.message-content {
+  line-height: 1.5;
+  font-size: 1.05rem;
 }
 
-.system-message {
-  text-align: center;
-  color: #6c757d;
+/* Styles pour les messages système */
+.bg-green-50 {
+  background-color: rgba(0, 200, 83, 0.15) !important;
 }
 
-.sender {
-  font-weight: bold;
-  margin-bottom: 5px;
+.bg-blue-50 {
+  background-color: rgba(3, 169, 244, 0.15) !important;
 }
 
-.time {
-  font-size: 0.8em;
-  text-align: right;
-  margin-top: 5px;
-  opacity: 0.8;
+.text-green-700 {
+  color: #00C853 !important;
+  font-weight: 500;
+}
+
+.text-blue-700 {
+  color: #039BE5 !important;
+  font-weight: 500;
 }

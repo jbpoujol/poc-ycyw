@@ -4,12 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { ChatMessage, MessageType } from '../../models/chat-message.model';
 
+// Imports PrimeNG
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { AvatarModule } from 'primeng/avatar';
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, CardModule, DividerModule, AvatarModule]
 })
 export class ChatComponent implements OnInit, OnDestroy {
   username: string = '';

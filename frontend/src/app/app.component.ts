@@ -6,10 +6,10 @@ import { ChatComponent } from './components/chat/chat.component';
   standalone: true,
   imports: [ChatComponent],
   template: `
-    <div class="container mt-3">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-center">YCYW Chat</h1>
+    <div class="p-3">
+      <div class="flex justify-content-center">
+        <div class="w-full">
+          <h1 class="text-center text-3xl mb-3">YCYW Chat</h1>
           <app-chat></app-chat>
         </div>
       </div>
