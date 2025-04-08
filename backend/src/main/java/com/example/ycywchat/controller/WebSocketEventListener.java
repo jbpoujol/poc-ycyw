@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -29,20 +29,17 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         
-        if (sessionAttributes != null) {
-            String username = (String) sessionAttributes.get("username");
-            
-            if (username != null) {
+        // Utilisation d'Optional pour une meilleure gestion des valeurs null (Java 21)
+        Optional.ofNullable(headerAccessor.getSessionAttributes())
+            .flatMap(sessionAttrs -> Optional.ofNullable((String) sessionAttrs.get("username")))
+            .ifPresent(username -> {
                 log.info("Utilisateur déconnecté : {}", username);
                 
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setType(ChatMessage.MessageType.LEAVE);
-                chatMessage.setSender(username);
+                // Création d'un message avec le constructeur compact (Java 21)
+                ChatMessage chatMessage = new ChatMessage(username, null, ChatMessage.MessageType.LEAVE);
                 
                 messagingTemplate.convertAndSend("/topic/public", chatMessage);
-            }
-        }
+            });
     }
 }

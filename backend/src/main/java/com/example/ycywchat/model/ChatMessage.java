@@ -1,19 +1,26 @@
 package com.example.ycywchat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class ChatMessage {
-    private String sender;
-    private String content;
-    private MessageType type;
-    private LocalDateTime timestamp = LocalDateTime.now();
+public record ChatMessage(
+    String sender,
+    String content,
+    MessageType type,
+    LocalDateTime timestamp
+) {
+    public ChatMessage {
+        if (timestamp == null) {
+            timestamp = LocalDateTime.now();
+        }
+    }
+    
+    public ChatMessage(String sender, String content, MessageType type) {
+        this(sender, content, type, LocalDateTime.now());
+    }
+    
+    public ChatMessage() {
+        this(null, null, null, LocalDateTime.now());
+    }
 
     public enum MessageType {
         CHAT,

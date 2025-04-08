@@ -2,7 +2,7 @@
 
 Ce projet est une preuve de concept (PoC) d'une application de chat en temps réel utilisant WebSocket. L'application est composée de deux services principaux :
 
-- **Backend** : Serveur Spring Boot avec WebSocket STOMP (port 8080)
+- **Backend** : Serveur Spring Boot avec WebSocket STOMP utilisant Java 21 (port 8080)
 - **Frontend** : Client web avec interface utilisateur simple (port 4200)
 
 **Note importante** : Ce PoC est uniquement destiné à des fins de démonstration et ne comprend pas d'authentification réelle ni de persistance des données (pas de base de données).
@@ -89,10 +89,20 @@ Pour tester le chat en temps réel :
 
 ## Architecture technique
 
-- **Backend** : Spring Boot avec WebSocket STOMP
+- **Backend** : Spring Boot 3.2.3 avec WebSocket STOMP et Java 21
 - **Frontend** : HTML/CSS/JavaScript avec client STOMP
 - **Communication** : WebSocket pour la communication en temps réel
 - **Conteneurisation** : Docker et Docker Compose
+
+## Fonctionnalités Java 21
+
+Le backend utilise plusieurs fonctionnalités de Java 21 pour améliorer les performances et la qualité du code :
+
+- **Records** : Utilisation des records Java pour le modèle de données (ChatMessage)
+- **Virtual Threads** : Configuration de Spring Boot pour utiliser les threads virtuels de Java 21
+- **Pattern Matching** : Utilisation du pattern matching pour les types dans les contrôleurs
+- **Formatted String Templates** : Utilisation de la méthode `formatted()` pour les chaînes de caractères
+- **Enhanced Optional API** : Utilisation des méthodes avancées d'Optional pour une meilleure gestion des valeurs null
 
 ## Arrêt de l'application
 
