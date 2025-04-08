@@ -20,6 +20,8 @@ public class ChatController {
         // Utilisation du pattern matching pour les types (Java 21)
         if (chatMessage.type() == ChatMessage.MessageType.CHAT) {
             logger.info("Message reçu de %s: %s".formatted(chatMessage.sender(), chatMessage.content()));
+        } else if (chatMessage.type() == ChatMessage.MessageType.LEAVE) {
+            logger.info("Notification de déconnexion reçue de %s".formatted(chatMessage.sender()));
         }
         return chatMessage;
     }

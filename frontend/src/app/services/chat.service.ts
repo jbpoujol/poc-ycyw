@@ -14,6 +14,9 @@ export class ChatService {
   private messagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   public messages$ = this.messagesSubject.asObservable();
   private username: string = '';
+  
+  // Stocker le dernier message LEAVE par utilisateur avec un timestamp
+  private lastLeaveMessages: Map<string, number> = new Map();
 
   constructor() { }
 
@@ -37,7 +40,32 @@ export class ChatService {
 
       // S'abonner au canal public
       this.client.subscribe('/topic/public', (message: IMessage) => {
+        console.log('Message reçu:', message.body);
         const chatMessage: ChatMessage = JSON.parse(message.body);
+        console.log('Type de message:', chatMessage.type, 'Sender:', chatMessage.sender);
+        
+        // Filtrer les messages LEAVE dupliqués en utilisant un tampon temporel
+        if (chatMessage.type === MessageType.LEAVE) {
+          const sender = chatMessage.sender;
+          const currentTime = new Date().getTime();
+          
+          // Vérifier si nous avons reçu un message LEAVE pour cet utilisateur récemment
+          if (this.lastLeaveMessages.has(sender)) {
+            const lastTime = this.lastLeaveMessages.get(sender)!;
+            const timeDiff = currentTime - lastTime;
+            
+            // Si le dernier message LEAVE a été reçu il y a moins de 1 seconde, ignorer celui-ci
+            if (timeDiff < 1000) {
+              console.log(`Ignorer message LEAVE dupliqué pour ${sender}, reçu ${timeDiff}ms après le précédent`);
+              return;
+            }
+          }
+          
+          // Enregistrer ce message LEAVE comme le plus récent pour cet utilisateur
+          this.lastLeaveMessages.set(sender, currentTime);
+          console.log(`Accepter message LEAVE pour ${sender}`);
+        }
+        
         const currentMessages = this.messagesSubject.value;
         this.messagesSubject.next([...currentMessages, chatMessage]);
       });
@@ -54,9 +82,24 @@ export class ChatService {
   }
 
   disconnect(): void {
-    if (this.client) {
-      // Ne pas envoyer de message LEAVE manuellement
-      // Le serveur détectera automatiquement la déconnexion
+    if (this.client && this.client.connected) {
+      try {
+        // Envoyer explicitement un message LEAVE avant de se déconnecter
+        this.sendMessage('', MessageType.LEAVE);
+        
+        // Utiliser une promesse pour attendre un court instant avant de déconnecter
+        // Cela donne le temps au message d'être envoyé sans bloquer l'interface utilisateur
+        Promise.resolve().then(() => {
+          // Désactiver le client après le prochain cycle de micro-tâches
+          this.client.deactivate();
+        });
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion:', error);
+        // En cas d'erreur, déconnecter quand même
+        this.client.deactivate();
+      }
+    } else if (this.client) {
+      // Si le client n'est pas connecté, simplement désactiver
       this.client.deactivate();
     }
   }
