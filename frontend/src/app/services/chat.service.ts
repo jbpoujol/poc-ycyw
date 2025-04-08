@@ -55,7 +55,8 @@ export class ChatService {
 
   disconnect(): void {
     if (this.client) {
-      this.sendMessage('', MessageType.LEAVE);
+      // Ne pas envoyer de message LEAVE manuellement
+      // Le serveur détectera automatiquement la déconnexion
       this.client.deactivate();
     }
   }
