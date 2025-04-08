@@ -31,7 +31,7 @@
             <div *ngIf="msg.type === 'JOIN'" class="system-message">
               <em>{{ msg.sender }} a rejoint le chat</em>
             </div>
-            <div *ngIf="msg.type === 'LEAVE'" class="system-message">
+            <div *ngIf="msg.type === 'LEAVE' && isFirstLeaveMessage(msg)" class="system-message">
               <em>{{ msg.sender }} a quitté le chat</em>
             </div>
           </div>
