@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ycyw-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - ycwy-network
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ycyw-frontend
+    ports:
+      - "4200:4200"
+    networks:
+      - ycwy-network
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/nginx/conf.d:/etc/nginx/conf.d
+    environment:
+      - BACKEND_URL=ws://backend:8080/ws-chat
+
+networks:
+  ycwy-network:
+    name: ycwy-network
+    driver: bridge
